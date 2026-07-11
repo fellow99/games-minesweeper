@@ -12,9 +12,9 @@
     expert: { name: '高级', rows: 16, cols: 30, mines: 99 },
   };
 
-  // ========== 数字颜色（经典扫雷配色） ==========
-  const NUMBER_COLORS = [
-    '',          // 0 - 不显示
+  // ========== 数字颜色（浅色/深色两套配色） ==========
+  const NUMBER_COLORS_LIGHT = [
+    '',          // 0
     '#0000ff',   // 1 - 蓝
     '#008000',   // 2 - 绿
     '#ff0000',   // 3 - 红
@@ -25,12 +25,66 @@
     '#808080',   // 8 - 灰
   ];
 
+  const NUMBER_COLORS_DARK = [
+    '',          // 0
+    '#6699ff',   // 1 - 亮蓝
+    '#44cc44',   // 2 - 亮绿
+    '#ff6666',   // 3 - 亮红
+    '#8888ee',   // 4 - 亮深蓝
+    '#ee8888',   // 5 - 亮棕红
+    '#44cccc',   // 6 - 亮青
+    '#cccccc',   // 7 - 白灰
+    '#aaaaaa',   // 8 - 亮灰
+  ];
+
+  // ========== 主题管理 ==========
+  const STORAGE_KEY = 'minesweeper-theme';
+
+  function getTheme() {
+    return document.documentElement.getAttribute('data-theme') || 'light';
+  }
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(STORAGE_KEY, theme);
+
+    // 更新按钮图标
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+      btn.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\u{1F319}'; // ☀️ / 🌙
+    }
+  }
+
+  function toggleTheme() {
+    const next = getTheme() === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    // 刷新棋盘以应用新的数字颜色
+    if (firstClickDone || gameOver || gameWon) {
+      renderBoard();
+    }
+  }
+
+  function getNumberColors() {
+    return getTheme() === 'dark' ? NUMBER_COLORS_DARK : NUMBER_COLORS_LIGHT;
+  }
+
+  // 初始化主题（localStorage 偏好优先）
+  (function initTheme() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'dark') {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  })();
+
   // ========== DOM 元素 ==========
   const elBoard = document.getElementById('board');
   const elMineCount = document.getElementById('mine-count');
   const elTimer = document.getElementById('timer');
   const elFace = document.getElementById('face');
   const elDifficulty = document.getElementById('difficulty');
+  const elThemeToggle = document.getElementById('theme-toggle');
 
   // ========== 游戏状态 ==========
   let rows, cols, totalMines, cellSize;
@@ -352,7 +406,7 @@
         cell.textContent = '\u{1F4A3}'; // 💣
       } else if (board[r][c] > 0) {
         cell.textContent = board[r][c];
-        cell.style.color = NUMBER_COLORS[board[r][c]];
+        cell.style.color = getNumberColors()[board[r][c]];
         cell.classList.add('num-' + board[r][c]);
       }
       return;
@@ -409,6 +463,9 @@
 
   // 笑脸按钮 → 重新开始
   elFace.addEventListener('click', init);
+
+  // 主题切换按钮
+  elThemeToggle.addEventListener('click', toggleTheme);
 
   // 难度选择
   elDifficulty.addEventListener('click', function (e) {

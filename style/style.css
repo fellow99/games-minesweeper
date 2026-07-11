@@ -1,4 +1,56 @@
-/* ========== 全局重置与基础样式 ========== */
+/* ================================================================
+   扫雷 Minesweeper - 主题系统
+   CSS变量驱动，支持浅色/深色模式切换
+   ================================================================ */
+
+/* ========== CSS变量 - 浅色主题（默认） ========== */
+:root,
+[data-theme="light"] {
+  --bg-page:            #e0e0e0;
+  --bg-panel:           #c0c0c0;
+  --bg-panel-active:    #b0b0b0;
+  --bg-counter:         #000;
+  --bg-kbd:             #eee;
+  --bg-cell-hover:      #d0d0d0;
+  --bg-wrong-flag:      #ffcccc;
+  --bg-mine:            #ff0000;
+
+  --border-light:       #ffffff;
+  --border-dark:        #808080;
+  --border-kbd:         #aaa;
+
+  --color-counter:      #ff0000;
+  --color-text:         #333;
+  --color-hint:         #666;
+
+  --shadow:             rgba(0, 0, 0, 0.3);
+  --transition-speed:   0.25s;
+}
+
+/* ========== CSS变量 - 深色主题 ========== */
+[data-theme="dark"] {
+  --bg-page:            #1a1a2e;
+  --bg-panel:           #2d2d3f;
+  --bg-panel-active:    #252535;
+  --bg-counter:         #0d0d1a;
+  --bg-kbd:             #333344;
+  --bg-cell-hover:      #3d3d4f;
+  --bg-wrong-flag:      #4a2525;
+  --bg-mine:            #cc3333;
+
+  --border-light:       #4a4a5a;
+  --border-dark:        #1a1a28;
+  --border-kbd:         #555566;
+
+  --color-counter:      #ff5555;
+  --color-text:         #ccccdd;
+  --color-hint:         #888899;
+
+  --shadow:             rgba(0, 0, 0, 0.6);
+  --transition-speed:   0.25s;
+}
+
+/* ========== 全局重置 ========== */
 *,
 *::before,
 *::after {
@@ -9,7 +61,8 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #e0e0e0;
+  background: var(--bg-page);
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,15 +70,46 @@ body {
   padding: 20px;
   user-select: none;
   -webkit-user-select: none;
+  transition: background var(--transition-speed);
+}
+
+/* ========== 主题切换按钮 ========== */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border: 2px solid;
+  border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  background: var(--bg-panel);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 100;
+  transition: background var(--transition-speed), border-color var(--transition-speed), transform 0.15s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  transform: scale(0.95);
 }
 
 /* ========== 游戏容器 ========== */
 .game-container {
-  background: #c0c0c0;
+  background: var(--bg-panel);
   border: 3px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
+  border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
   padding: 10px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 8px var(--shadow);
+  transition: background var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
 
 /* ========== 顶部状态栏 ========== */
@@ -35,14 +119,15 @@ body {
   align-items: center;
   margin-bottom: 10px;
   padding: 4px 6px;
-  background: #c0c0c0;
+  background: var(--bg-panel);
   border: 2px solid;
-  border-color: #808080 #ffffff #ffffff #808080;
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  transition: background var(--transition-speed), border-color var(--transition-speed);
 }
 
 .counter {
-  background: #000;
-  color: #ff0000;
+  background: var(--bg-counter);
+  color: var(--color-counter);
   font-family: 'Consolas', 'Courier New', monospace;
   font-size: 24px;
   font-weight: bold;
@@ -50,8 +135,9 @@ body {
   min-width: 54px;
   text-align: center;
   border: 2px solid;
-  border-color: #808080 #ffffff #ffffff #808080;
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
   line-height: 1;
+  transition: background var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
 }
 
 #face {
@@ -59,8 +145,8 @@ body {
   height: 42px;
   font-size: 24px;
   border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  background: #c0c0c0;
+  border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  background: var(--bg-panel);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -68,10 +154,11 @@ body {
   line-height: 1;
   outline: none;
   padding: 0;
+  transition: background var(--transition-speed), border-color var(--transition-speed);
 }
 
 #face:active {
-  border-color: #808080 #ffffff #ffffff #808080;
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
 }
 
 /* ========== 难度选择 ========== */
@@ -86,69 +173,74 @@ body {
   padding: 4px 14px;
   font-size: 14px;
   font-family: inherit;
+  color: var(--color-text);
   border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  background: #c0c0c0;
+  border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  background: var(--bg-panel);
   cursor: pointer;
   outline: none;
+  transition: background var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed);
 }
 
 .difficulty-bar button:active,
 .difficulty-bar button.active {
-  border-color: #808080 #ffffff #ffffff #808080;
-  background: #b0b0b0;
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  background: var(--bg-panel-active);
 }
 
 /* ========== 棋盘 ========== */
 .board-wrapper {
   border: 3px solid;
-  border-color: #808080 #ffffff #ffffff #808080;
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
   display: inline-block;
+  transition: border-color var(--transition-speed);
 }
 
 #board {
   display: grid;
   gap: 0;
-  background: #c0c0c0;
+  background: var(--bg-panel);
   line-height: 1;
+  transition: background var(--transition-speed);
 }
 
 /* ========== 格子 ========== */
 .cell {
   border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  background: #c0c0c0;
+  border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  background: var(--bg-panel);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   cursor: pointer;
   position: relative;
+  transition: background var(--transition-speed), border-color var(--transition-speed);
 }
 
-.cell:hover:not(.revealed):not(.flagged):not(.exploded) {
-  background: #d0d0d0;
+.cell:hover:not(.revealed):not(.flagged):not(.exploded):not(.mine) {
+  background: var(--bg-cell-hover);
 }
 
-.cell:active:not(.revealed):not(.flagged):not(.exploded) {
-  border-color: #808080 #ffffff #ffffff #808080;
+.cell:active:not(.revealed):not(.flagged):not(.exploded):not(.mine) {
+  border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
 }
 
 /* 已揭开 */
 .cell.revealed {
-  border: 1px solid #808080;
-  background: #c0c0c0;
+  border: 1px solid var(--border-dark);
+  background: var(--bg-panel);
   cursor: default;
 }
 
 /* 地雷 */
 .cell.mine {
-  background: #ff0000;
+  background: var(--bg-mine);
 }
 
 /* 爆炸的雷 - 踩中那颗 */
 .cell.exploded {
-  background: #ff0000;
+  background: var(--bg-mine);
   animation: explode 0.35s ease-out;
 }
 
@@ -165,44 +257,37 @@ body {
 
 /* 错误标记 */
 .cell.wrong-flag {
-  background: #ffcccc;
+  background: var(--bg-wrong-flag);
 }
-
-/* 数字颜色 */
-.cell.num-1 { color: #0000ff; }
-.cell.num-2 { color: #008000; }
-.cell.num-3 { color: #ff0000; }
-.cell.num-4 { color: #000080; }
-.cell.num-5 { color: #800000; }
-.cell.num-6 { color: #008080; }
-.cell.num-7 { color: #000000; }
-.cell.num-8 { color: #808080; }
 
 /* ========== 标题 ========== */
 .game-title {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 12px;
-  color: #333;
+  color: var(--color-text);
   text-align: center;
+  transition: color var(--transition-speed);
 }
 
 /* ========== 键盘提示 ========== */
 .hint {
   margin-top: 12px;
   font-size: 13px;
-  color: #666;
+  color: var(--color-hint);
   text-align: center;
   line-height: 1.8;
+  transition: color var(--transition-speed);
 }
 
 .hint kbd {
-  background: #eee;
-  border: 1px solid #aaa;
+  background: var(--bg-kbd);
+  border: 1px solid var(--border-kbd);
   border-radius: 3px;
   padding: 1px 5px;
   font-family: inherit;
   font-size: 12px;
+  transition: background var(--transition-speed), border-color var(--transition-speed);
 }
 
 /* ========== 响应式 ========== */
@@ -257,5 +342,13 @@ body {
     width: 32px;
     height: 32px;
     font-size: 18px;
+  }
+
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    font-size: 17px;
   }
 }

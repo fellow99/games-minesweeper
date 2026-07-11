@@ -19,11 +19,13 @@ visual-engineering这个子agent配置了有视觉能力的模型，可以用于
 		- AGENTS.md		本文档
 		- README.md		本工程介绍文档
 		- specs/		规范文档目录
+			- *.md		按speckit工具技能生成的规范文档
 		- index.html	程序入口页
 		- style/		样式目录
-			style.css	主样式文件
-			*.css		其他样式文件
+			- style.css	主样式文件
+			- *.css		其他样式文件
 		- js/			JS代码目录
-			main.js		主代码文件
-			*.js		其他代码文件
+			- main.js		主代码文件
+			- *.js		其他代码文件
 		- images/		图片资源目录
+			- 各种图片资源
