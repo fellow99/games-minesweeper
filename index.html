@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>扫雷 - Minesweeper</title>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+  <h1 class="game-title">💣 扫雷 Minesweeper</h1>
+
+  <div class="game-container">
+    <!-- 难度选择 -->
+    <div class="difficulty-bar" id="difficulty">
+      <button data-level="beginner" class="active">初级 9×9</button>
+      <button data-level="intermediate">中级 16×16</button>
+      <button data-level="expert">高级 30×16</button>
+    </div>
+
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <div class="counter" id="mine-count">010</div>
+      <button id="face">🙂</button>
+      <div class="counter" id="timer">000</div>
+    </div>
+
+    <!-- 棋盘 -->
+    <div class="board-wrapper">
+      <div id="board"></div>
+    </div>
+  </div>
+
+  <p class="hint">
+    快捷键：<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 切换难度 &nbsp;|&nbsp;
+    <kbd>R</kbd> 重新开始 &nbsp;|&nbsp;
+    右键标旗 🚩
+  </p>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

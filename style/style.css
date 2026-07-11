@@ -1,0 +1,261 @@
+/* ========== 全局重置与基础样式 ========== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ========== 游戏容器 ========== */
+.game-container {
+  background: #c0c0c0;
+  border: 3px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  padding: 10px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== 顶部状态栏 ========== */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 4px 6px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.counter {
+  background: #000;
+  color: #ff0000;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 2px 6px;
+  min-width: 54px;
+  text-align: center;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  line-height: 1;
+}
+
+#face {
+  width: 42px;
+  height: 42px;
+  font-size: 24px;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  background: #c0c0c0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  outline: none;
+  padding: 0;
+}
+
+#face:active {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* ========== 难度选择 ========== */
+.difficulty-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.difficulty-bar button {
+  padding: 4px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  background: #c0c0c0;
+  cursor: pointer;
+  outline: none;
+}
+
+.difficulty-bar button:active,
+.difficulty-bar button.active {
+  border-color: #808080 #ffffff #ffffff #808080;
+  background: #b0b0b0;
+}
+
+/* ========== 棋盘 ========== */
+.board-wrapper {
+  border: 3px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  display: inline-block;
+}
+
+#board {
+  display: grid;
+  gap: 0;
+  background: #c0c0c0;
+  line-height: 1;
+}
+
+/* ========== 格子 ========== */
+.cell {
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  background: #c0c0c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+}
+
+.cell:hover:not(.revealed):not(.flagged):not(.exploded) {
+  background: #d0d0d0;
+}
+
+.cell:active:not(.revealed):not(.flagged):not(.exploded) {
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+/* 已揭开 */
+.cell.revealed {
+  border: 1px solid #808080;
+  background: #c0c0c0;
+  cursor: default;
+}
+
+/* 地雷 */
+.cell.mine {
+  background: #ff0000;
+}
+
+/* 爆炸的雷 - 踩中那颗 */
+.cell.exploded {
+  background: #ff0000;
+  animation: explode 0.35s ease-out;
+}
+
+@keyframes explode {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+
+/* 旗帜 */
+.cell.flagged {
+  cursor: default;
+}
+
+/* 错误标记 */
+.cell.wrong-flag {
+  background: #ffcccc;
+}
+
+/* 数字颜色 */
+.cell.num-1 { color: #0000ff; }
+.cell.num-2 { color: #008000; }
+.cell.num-3 { color: #ff0000; }
+.cell.num-4 { color: #000080; }
+.cell.num-5 { color: #800000; }
+.cell.num-6 { color: #008080; }
+.cell.num-7 { color: #000000; }
+.cell.num-8 { color: #808080; }
+
+/* ========== 标题 ========== */
+.game-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #333;
+  text-align: center;
+}
+
+/* ========== 键盘提示 ========== */
+.hint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.hint kbd {
+  background: #eee;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 860px) {
+  .game-container {
+    padding: 6px;
+  }
+
+  .difficulty-bar button {
+    padding: 3px 8px;
+    font-size: 12px;
+  }
+
+  .counter {
+    font-size: 18px;
+    min-width: 44px;
+    padding: 2px 4px;
+  }
+
+  #face {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  body {
+    padding: 10px;
+  }
+
+  .game-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .difficulty-bar {
+    gap: 4px;
+  }
+
+  .difficulty-bar button {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .counter {
+    font-size: 15px;
+    min-width: 38px;
+  }
+
+  #face {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+}
