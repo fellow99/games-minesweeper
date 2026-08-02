@@ -26,7 +26,6 @@
 ├── js/
 │   └── main.js        # 游戏核心逻辑
 ├── images/            # 图片资源目录
-├── specs/             # 规范文档目录
 ├── AGENTS.md          # AI开发规范文档
 └── README.md          # 本文件
 ```
